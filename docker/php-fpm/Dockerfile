@@ -4,6 +4,15 @@ FROM php:8.1.0-fpm-alpine
 
 RUN apk add --no-cache curl git build-base zlib-dev oniguruma-dev autoconf bash
 
+ARG INSTALL_XDEBUG=false
+
+RUN if [ ${INSTALL_XDEBUG} = true ]; \
+  then \
+  pecl install xdebug && docker-php-ext-enable xdebug; \
+  fi;
+
+COPY ./docker/php-fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 # Configure non-root user. Всегда есть баги, которые позволят зловреду выбраться из контейнера и попасть на хостовый компьютер. Предполагая худшее, мы должны обеспечить запуск процессов внутри контейнера от пользователя, который не имеет никаких прав на хостовой машине. Для использования внешних переменных в Dockerfile служат директивы ENV и ARG.
 
 ARG PUID=1000
