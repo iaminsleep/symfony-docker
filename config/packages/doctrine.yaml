@@ -1,0 +1,45 @@
+# Doctrine Mapping в Symfony. 26.01.2021 PHP, Symfony Ristee 0. Doctrine достаточно мощная система для работы с базами данных. Система для создания миграций и поддержания в актуальном состоянии структуру баз данных. Отличие Doctrine от других подобных систем в том, что Doctrine на основе созданных моделей и описанных в них полях определяет разницу структуры и создает миграции таким образом, чтобы после их запуска структура оказалась как описано в моделях.
+
+doctrine:
+  dbal:
+    url: "%env(resolve:DATABASE_URL)%"
+
+    # IMPORTANT: You MUST configure your server version,
+    # either here or in the DATABASE_URL env var (see .env file)
+    #server_version: '13'
+  orm:
+    auto_generate_proxy_classes: true
+    naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+    auto_mapping: true
+    mappings:
+      Users:
+        is_bundle: false
+        type: xml #xml вариант маппинга перенести всю ответственность за детали инфраструктурной реализации маппера на соответствующий слой, избавив домен от лишних зависимостей
+        dir: "%kernel.project_dir%/src/Users/Infrastructure/Database/ORM"
+        prefix: 'App\Entity'
+        alias: Users
+
+# when@test:
+#   doctrine:
+#     dbal:
+#       # "TEST_TOKEN" is typically set by ParaTest
+#       dbname_suffix: "_test%env(default::TEST_TOKEN)%"
+
+when@prod:
+  doctrine:
+    orm:
+      auto_generate_proxy_classes: false
+      query_cache_driver:
+        type: pool
+        pool: doctrine.system_cache_pool
+      result_cache_driver:
+        type: pool
+        pool: doctrine.result_cache_pool
+
+  framework:
+    cache:
+      pools:
+        doctrine.result_cache_pool:
+          adapter: cache.app
+        doctrine.system_cache_pool:
+          adapter: cache.system
