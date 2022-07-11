@@ -1,0 +1,14 @@
+<doctrine-mapping xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <!-- Доктрина следует паттерну data-mapping, и для того чтобы создать проекцию объектного представления из памяти с реляционным представления, используется xml-конфигурация -->
+    <entity name="App\Users\Domain\Entity\User" table="users_user">
+    <!-- users_user: users - таблица, user - название модели -->
+      <id name="ulid" type="string" lenth="26">
+        <generator strategy="NONE"/>
+      </id>
+      <field name="email" type="string"></field>
+      <field name="password" type="string"></field>
+    </entity>
+</doctrine-mapping>
