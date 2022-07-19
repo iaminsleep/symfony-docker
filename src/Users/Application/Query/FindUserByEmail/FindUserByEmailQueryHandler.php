@@ -11,7 +11,7 @@ use App\Users\Application\DTO\UserDTO;
 
 class FindUserByEmailQueryHandler implements QueryHandlerInterface
 {
-  public function __construct(private UserRepositoryInterface $userRepository) {}
+  public function __construct(private readonly UserRepositoryInterface $userRepository) {}
 
   public function __invoke(FindUserByEmailQuery $query): UserDTO { // DTO должны храниться на прикладном слое, поэтому папка DTO находится вместе с Command и Query в прикладном слое (Application)
     $user = $this->userRepository->findByEmail($query->email);

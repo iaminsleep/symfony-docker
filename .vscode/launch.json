@@ -5,7 +5,7 @@
       "name": "Listen for XDebug on Docker",
       "type": "php",
       "request": "launch",
-      "port": 9000,
+      "port": 9003,
       "pathMappings": {
         "/var/www": "${workspaceFolder}",
       }

@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class HelloWorldActionTest extends WebTestCase 
+class HelloWorldControllerTest extends WebTestCase 
 {
   public function test_request_responded_successful(): void {
     $client = static::createClient();

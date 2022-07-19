@@ -20,7 +20,8 @@ use App\Tests\Resource\Fixture\UserFixture;
 class UserRepositoryTest extends WebTestCase
 {
   private UserRepository $repository;
-  // private UserFactory $userFactory;
+  private UserFactory $userFactory;
+
   //Faker
   private Generator $faker;
   // LiipTestFixturesBundle
@@ -30,7 +31,7 @@ class UserRepositoryTest extends WebTestCase
     parent::setUp();
     // репозиторий и factory будут подтягиваться из контейнера
     $this->repository = static::getContainer()->get(UserRepository::class);
-    // $this->userFactory = static::getContainer()->get(UserFactory::class);
+    $this->userFactory = static::getContainer()->get(UserFactory::class);
 
     // Faker
     $this->faker = Factory::create();
@@ -45,8 +46,7 @@ class UserRepositoryTest extends WebTestCase
     $email = $this->faker->email();
     $password = $this->faker->password();
 
-    // $user = $this->userFactory->create($email, $password);
-    $user = (new UserFactory())->create($email, $password);
+    $user = $this->userFactory->create($email, $password);
 
     // act
     $this->repository->add($user);

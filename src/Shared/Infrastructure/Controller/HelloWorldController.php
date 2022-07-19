@@ -20,7 +20,8 @@ class HelloWorldController
         return new JsonResponse(
             [
                 'status' => 'ok', 
-                'message' => 'Hello '.$name.'!'
+                'message' => 'Hello '.$name.'!',
+                'ssl' => extension_loaded('openssl')
             ]
         );
     }

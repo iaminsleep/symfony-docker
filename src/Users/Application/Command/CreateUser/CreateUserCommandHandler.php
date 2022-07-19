@@ -13,13 +13,13 @@ use App\Users\Domain\Factory\UserFactory;
 
 class CreateUserCommandHandler implements CommandHandlerInterface 
 {
-  public function __construct(private UserRepositoryInterface $userRepository) {}
+  public function __construct(private readonly UserRepositoryInterface $userRepository, private readonly UserFactory $userFactory) {}
 
   /**
    * @return string Возвращает ID созданного пользователя
    */
   public function __invoke(CreateUserCommand $createUserCommand) : string {
-    $user = (new UserFactory())->create($createUserCommand->email, $createUserCommand->password);
+    $user = $this->userFactory->create($createUserCommand->email, $createUserCommand->password);
     $this->userRepository->add($user);
 
     return $user->getUlid(); // return user ID

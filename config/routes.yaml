@@ -5,7 +5,13 @@ controllers:
 kernel:
   resource: ../src/Shared/Infrastructure/Kernel.php
   type: annotation
+  
+api_refresh_token:
+  path: /api/auth/token/refresh
 
-hello:
-  path: /hello
-  controller: App\Controller\HelloWorldController
+api_login_check:
+  path: /api/auth/token/login
+
+users:
+  resource: ../src/Users/Infrastructure/Controller/
+  type: annotation

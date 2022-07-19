@@ -3,12 +3,12 @@
       xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <!-- Доктрина следует паттерну data-mapping, и для того чтобы создать проекцию объектного представления из памяти с реляционным представления, используется xml-конфигурация -->
-    <entity name="App\Users\Domain\Entity\User" table="users_user">
+    <entity name="App\Users\Domain\Entity\User" table="users">
     <!-- users_user: users - таблица, user - название модели -->
-      <id name="ulid" type="string" lenth="26">
+      <id name="ulid" type="string" length="26">
         <generator strategy="NONE"/>
       </id>
-      <field name="email" type="string"></field>
-      <field name="password" type="string"></field>
+      <field name="email" type="string" length="30"></field>
+      <field name="password" type="string" length="70" nullable="true"></field>
     </entity>
 </doctrine-mapping>
