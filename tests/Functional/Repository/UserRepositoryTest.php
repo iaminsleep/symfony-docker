@@ -4,68 +4,67 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Repository;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-use Faker\Factory;
-use Faker\Generator;
-
+use App\Tests\Resource\Fixture\UserFixture;
 use App\Users\Domain\Factory\UserFactory;
 use App\Users\Infrastructure\Repository\UserRepository;
-
+use Faker\Factory;
+use Faker\Generator;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
-
-use App\Tests\Resource\Fixture\UserFixture;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserRepositoryTest extends WebTestCase
 {
-  private UserRepository $repository;
-  private UserFactory $userFactory;
-
-  //Faker
-  private Generator $faker;
-  // LiipTestFixturesBundle
-  private AbstractDatabaseTool $databaseTool;
-
-  public function setUp(): void {
-    parent::setUp();
-    // репозиторий и factory будут подтягиваться из контейнера
-    $this->repository = static::getContainer()->get(UserRepository::class);
-    $this->userFactory = static::getContainer()->get(UserFactory::class);
+    private UserRepository $repository;
+    private UserFactory $userFactory;
 
     // Faker
-    $this->faker = Factory::create();
-
+    private Generator $faker;
     // LiipTestFixturesBundle
-    $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
-  }
+    private AbstractDatabaseTool $databaseTool;
 
-  // Тестирование добавления пользователя в репозиторий
-  public function test_user_added_successfully(): void {
-    // Чтобы не брать емейл и пароль из потолка, используется библиотека faker
-    $email = $this->faker->email();
-    $password = $this->faker->password();
+    public function setUp(): void
+    {
+        parent::setUp();
+        // репозиторий и factory будут подтягиваться из контейнера
+        $this->repository = static::getContainer()->get(UserRepository::class);
+        $this->userFactory = static::getContainer()->get(UserFactory::class);
 
-    $user = $this->userFactory->create($email, $password);
+        // Faker
+        $this->faker = Factory::create();
 
-    // act
-    $this->repository->add($user);
+        // LiipTestFixturesBundle
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+    }
 
-    // assert
-    $existingUser = $this->repository->findByUlid($user->getUlid());
-    $this->assertEquals($user->getUlid(), $existingUser->getUlid());
-  }
+    // Тестирование добавления пользователя в репозиторий
+    public function test_user_added_successfully(): void
+    {
+        // Чтобы не брать емейл и пароль из потолка, используется библиотека faker
+        $email = $this->faker->email();
+        $password = $this->faker->password();
 
-  // Тестирование по наличию пользователя в БД. Предварительно можно подготовить данные для сценариев. Для этого нужно воспользоваться LiipTestFixturesBundle, чтобы можно использовать фикстуры в рамках теста.
-  public function test_user_found_successfully(): void {
-    // arrange
-    $executor = $this->databaseTool->loadFixtures([UserFixture::class]);
-    $user = $executor->getReferenceRepository()->getReference(UserFixture::REFERENCE);
+        $user = $this->userFactory->create($email, $password);
 
-    // act
-    $existingUser = $this->repository->findByUlid($user->getUlid());
+        // act
+        $this->repository->add($user);
 
-    // assert
-    $this->assertEquals($user->getUlid(), $existingUser->getUlid());
-  }
+        // assert
+        $existingUser = $this->repository->findByUlid($user->getUlid());
+        $this->assertEquals($user->getUlid(), $existingUser->getUlid());
+    }
+
+    // Тестирование по наличию пользователя в БД. Предварительно можно подготовить данные для сценариев. Для этого нужно воспользоваться LiipTestFixturesBundle, чтобы можно использовать фикстуры в рамках теста.
+    public function test_user_found_successfully(): void
+    {
+        // arrange
+        $executor = $this->databaseTool->loadFixtures([UserFixture::class]);
+        $user = $executor->getReferenceRepository()->getReference(UserFixture::REFERENCE);
+
+        // act
+        $existingUser = $this->repository->findByUlid($user->getUlid());
+
+        // assert
+        $this->assertEquals($user->getUlid(), $existingUser->getUlid());
+    }
 }

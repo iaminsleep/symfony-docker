@@ -14,10 +14,13 @@ use App\Users\Domain\Entity\User;
 
 class UserDTO
 {
-  public function __construct(public string $ulid, public string $email) {}
+    public function __construct(public readonly string $ulid, public readonly string $email)
+    {
+    }
 
-  public static function fromEntityToDTO(User $user): self {
-    // Функция для создания DTO из Entity
-    return new self($user->getUlid(), $user->getEmail()); // используем геттеры
-  }
+    public static function fromEntityToDTO(User $user): self
+    {
+        // Функция для создания DTO из Entity
+        return new self($user->getUlid(), $user->getEmail()); // используем геттеры
+    }
 }

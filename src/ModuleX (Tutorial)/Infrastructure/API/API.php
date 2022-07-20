@@ -6,7 +6,9 @@ namespace App\ModuleX\Infrastructure\API;
 
 class API
 {
-  public function getSomeData(): array {
-    return [];
-  }
+    /* @return array */
+    public function getSomeData(): array
+    {
+        return [];
+    }
 }

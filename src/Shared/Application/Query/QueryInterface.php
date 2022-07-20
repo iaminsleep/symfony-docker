@@ -6,6 +6,6 @@ namespace App\Shared\Application\Query;
 
 // Интерфейс запросов
 
-interface QueryInterface {
-
+interface QueryInterface
+{
 }

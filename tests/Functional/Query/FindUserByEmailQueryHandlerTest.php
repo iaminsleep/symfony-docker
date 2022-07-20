@@ -4,44 +4,40 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Query;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-use Faker\Factory;
-use App\Shared\Infrastructure\Bus\QueryBus;
-use App\Users\Domain\Repository\UserRepositoryInterface;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-
+use App\Shared\Application\Query\QueryBusInterface;
 use App\Tests\Resource\Fixture\UserFixture;
-use App\Users\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Users\Application\DTO\UserDTO;
+use App\Users\Application\Query\FindUserByEmail\FindUserByEmailQuery;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class FindUserByEmailQueryHandlerTest extends WebTestCase
 {
-  public function setUp(): void {
-    parent::setUp();
+    private QueryBusInterface $queryBus;
+    private AbstractDatabaseTool $databaseTool;
 
-    $this->faker = Factory::create(); //Faker
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->queryBus = $this::getContainer()->get(QueryBusInterface::class); // Query bus to execute command
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get(); // LiipTestFixturesBundle
+    }
 
-    $this->queryBus = $this::getContainer()->get(QueryBus::class); // Шина для запросов
+    public function test_user_created_when_command_executed(): void
+    {
+        // arrange
+        $referenceRepository = $this->databaseTool->loadFixtures([UserFixture::class])->getReferenceRepository(); // воспользуемся фикстурой для заполнения данных в базе данных
 
-    $this->userRepository = $this::getContainer()->get(UserRepositoryInterface::class); // Класс для работы с пользователями
+        /** @var User $user */
+        $user = $referenceRepository->getReference(UserFixture::REFERENCE);
 
-    $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get(); // LiipTestFixturesBundl
-  }
+        $query = new FindUserByEmailQuery($user->getEmail()); // подготавливаем запрос для поиска пользователя по емейлу
 
-  public function test_user_created_when_command_executed() : void {
-    // arrange
-    $referenceRepository = $this->databaseTool->loadFixtures([UserFixture::class])->getReferenceRepository(); // воспользуемся фикстурой для заполнения данных в базе данных
+        // act
+        $userDTO = $this->queryBus->execute($query); // выполняем запрос через шину запросов
 
-    /** @var User $user */
-    $user = $referenceRepository->getReference(UserFixture::REFERENCE);
-
-    $query = new FindUserByEmailQuery($user->getEmail()); // подготавливаем запрос для поиска пользователя по емейлу
-
-    // act
-    $userDTO = $this->queryBus->execute($query); // выполняем запрос через шину запросов
-
-    // assert
-    $this->assertInstanceOf(UserDTO::class, $userDTO); // проверяем утверждение, является ли полученный результат объектом передачи данных (если пользователь не найден, то false)
-  }
+        // assert
+        $this->assertInstanceOf(UserDTO::class, $userDTO); // проверяем утверждение, является ли полученный результат объектом передачи данных (если пользователь не найден, то false)
+    }
 }

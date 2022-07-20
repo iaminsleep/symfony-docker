@@ -8,5 +8,5 @@ use App\Users\Domain\Entity\User;
 
 interface UserPasswordHasherInterface
 {
-  public function hash(User $user, string $password) : string;
+    public function hash(User $user, string $password): string;
 }

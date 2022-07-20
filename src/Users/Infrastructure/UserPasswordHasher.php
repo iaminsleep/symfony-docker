@@ -12,9 +12,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as BaseU
 
 class UserPasswordHasher implements UserPasswordHasherInterface
 {
-  public function __construct(private readonly BaseUserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(private readonly BaseUserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
-  public function hash(User $user, string $password) : string {
-    return $this->passwordHasher->hashPassword($user, $password);
-  }
+    public function hash(User $user, string $password): string
+    {
+        return $this->passwordHasher->hashPassword($user, $password);
+    }
 }

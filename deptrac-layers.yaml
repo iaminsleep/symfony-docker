@@ -1,0 +1,28 @@
+# Данный конфиг поможет обнаружить проблемы использования зависимостей между слоями - Бизнес-логикой (Доменный слой), Прикладным слоем и слоем Инфраструктуры. Таким образом, модуль Domain не должен иметь никаких зависимостей от модулей Application и Infrastructure, модуль Application может зависеть от Domain, но не зависеть от Infrastructure, а модуль Infrastructure может иметь любые зависимости.
+
+parameters:
+  paths:
+    - ./src
+  layers:
+    - name: Domain
+      collectors:
+        - type: directory
+          regex: /src/\w+/Domain/.*
+
+    - name: Application
+      collectors:
+        - type: directory
+          regex: /src/\w+/Application/.*
+
+    - name: Infrastructure
+      collectors:
+        - type: directory
+          regex: /src/\w+/Infrastructure/.*
+
+  ruleset:
+    Domain:
+    Application:
+      - Domain
+    Infrastructure:
+      - Domain
+      - Application

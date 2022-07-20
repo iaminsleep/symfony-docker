@@ -11,13 +11,16 @@ use App\Users\Domain\Service\UserPasswordHasherInterface;
 
 class UserFactory
 {
-  public function __construct(private readonly UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
-  public function create(string $email, string $password): User {
-    $user = new User($email);
+    public function create(string $email, string $password): User
+    {
+        $user = new User($email);
 
-    $user->setPassword($password, $this->passwordHasher); // Устанавливаем пароль динамически
+        $user->setPassword($password, $this->passwordHasher); // Устанавливаем пароль динамически
 
-    return $user;
-  }
+        return $user;
+    }
 }

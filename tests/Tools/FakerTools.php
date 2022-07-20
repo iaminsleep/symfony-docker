@@ -9,7 +9,8 @@ use Faker\Generator;
 
 trait FakerTools // Трейты можно подключать в любом классе
 {
-  public function getFaker(): Generator {
-    return Factory::create();
-  }
+    public function getFaker(): Generator
+    {
+        return Factory::create();
+    }
 }

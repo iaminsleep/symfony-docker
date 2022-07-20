@@ -55,7 +55,7 @@ class User implements AuthUserInterface
 
     /**
      * Лучше всего хэшировать пароль в самой сущности, потому что есть вероятность что разработчик может забыть прохэшировать пароль в функции. Автоматическое динамическое хэшировать позволяет избежать этого.
-     **/ 
+     **/
     public function setPassword(
         ?string $password,
         UserPasswordHasherInterface $passwordHasher
